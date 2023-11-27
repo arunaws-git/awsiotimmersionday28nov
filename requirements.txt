@@ -1,0 +1,5 @@
+usocket
+ustruct
+adafruit-circuitpython-dht
+ujson
+machine
