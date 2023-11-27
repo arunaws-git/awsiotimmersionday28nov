@@ -1,4 +1,4 @@
-# Setup instructtions to use Raspberry Pi as AWS IoT Client Device
+# Setup instructions to use Raspberry Pi as AWS IoT Client Device
 
 ## Configure DHT22 attached Raspberry Pi as AWS IoT Client Device
 
