@@ -52,7 +52,7 @@ while True:
         message = json.dumps({
                 "client": CLIENT_ID,
                 "device": {
-                    "uptime": t.ticks_ms()
+                    "timestamp": t.time
                 },
                 "sensors": {
                     "temperature": temp,
