@@ -1,6 +1,3 @@
-# WiFi configuration
-WIFI_SSID = "<YOUR_WIFI_SSID>"
-WIFI_PASS = "<YOUR_WIFI_PASSWORD>"
 
 # MQTT configuration
 MQTT_PORT = "<YOUR_BROKER_ENDPOINT_PORT>"

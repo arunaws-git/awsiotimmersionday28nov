@@ -1,4 +1,5 @@
 import time as t
+import datetime
 import json
 import AWSIoTPythonSDK.MQTTLib as AWSIoTPyMQTT
 import board
@@ -11,7 +12,7 @@ CLIENT_ID = config.THING_ID
 PATH_TO_CERTIFICATE = config.THING_CLIENT_CERT
 PATH_TO_PRIVATE_KEY = config.THING_PRIVATE_KEY
 PATH_TO_AMAZON_ROOT_CA_1 = config.THING_ROOT_CA
-TOPIC = "clients/" + CLIENT_ID + "/hello/world"
+TOPIC = "clients/" + CLIENT_ID + "/temp_humid"
 
 dhtDevice = adafruit_dht.DHT22(board.D4, use_pulseio=False)
 class dht22reading:
@@ -20,14 +21,16 @@ class dht22reading:
 
 def read_dht22sensorvalues():
     try:
-        # Print the values to the serial port
+       
         dht22reading.temperature_c = dhtDevice.temperature        
         dht22reading.humidity = dhtDevice.humidity
         return dht22reading
+    
     except RuntimeError as error:
-        # Errors happen fairly often, DHT's are hard to read, just keep going
+        # dht is delicate often drops the port, but will pick up on its own in less than a second; so suppress and move on with it
         print(error.args[0])
         t.sleep(2.0)
+    
     except Exception as error:
         dhtDevice.exit()
         raise error
@@ -51,20 +54,22 @@ while True:
             
         message = json.dumps({
                 "client": CLIENT_ID,
-                "device": {
-                    "timestamp": t.time
-                },
+                "timestamp": str(datetime.datetime.utcnow())
                 "sensors": {
                     "temperature": temp,
                     "humidity": hum,
                 },
-                "status": "online",
+                "status": "online"
             })
         
         myAWSIoTMQTTClient.publish(TOPIC, json.dumps(message), 1) 
-        print("Published: '" + json.dumps(message) + "' to the topic: " + "'test/testing'")
+        print("Published: '" + json.dumps(message) + "' to the topic: " + TOPIC)
     
-        t.sleep(0.1)
+        t.sleep(1)
+    except AttributeError:
+        continue
+    except RuntimeError:
+        t.sleep(2.0)
     except OSError as e:
         print("RECONNECT TO MQTT BROKER")
         break
