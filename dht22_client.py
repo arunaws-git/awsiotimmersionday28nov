@@ -27,7 +27,7 @@ def read_dht22sensorvalues():
     except RuntimeError as error:
         # Errors happen fairly often, DHT's are hard to read, just keep going
         print(error.args[0])
-        time.sleep(2.0)
+        t.sleep(2.0)
     except Exception as error:
         dhtDevice.exit()
         raise error
@@ -50,12 +50,12 @@ while True:
         hum = readings.humidity
             
         message = json.dumps({
-                "client": client_id,
+                "client": CLIENT_ID,
                 "device": {
-                    "uptime": time.ticks_ms()
+                    "uptime": t.ticks_ms()
                 },
                 "sensors": {
-                    "temperature": temp_f,
+                    "temperature": temp,
                     "humidity": hum,
                 },
                 "status": "online",
@@ -68,6 +68,6 @@ while True:
     except OSError as e:
         print("RECONNECT TO MQTT BROKER")
         break
-    
+
 print('Publish End')
 myAWSIoTMQTTClient.disconnect()
